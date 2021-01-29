@@ -29,12 +29,38 @@ namespace ConsoleClientApp
             Bier bier = bieren.FirstOrDefault();
             if (bier != null)
             {
-                Console.WriteLine($"BierNr: {bier.BierNr} - Naam: {bier.Naam} - Alcohol: {bier.Alcohol} - SoortNr: {bier.SoortNr}");
+                Console.WriteLine(bier);
                 Random rand = new Random();
                 Console.WriteLine("Bier van de maand:");
                 Bier randomBier = bieren.ElementAt(rand.Next(0, bieren.Count));
-                Console.WriteLine($"BierNr: {randomBier.BierNr} - Naam: {randomBier.Naam} - Alcohol: {randomBier.Alcohol} - SoortNr: {randomBier.SoortNr}");
+                Console.WriteLine(randomBier);
             }
+
+           Bier bier2 = await bierenService.GeefBierVoorBierNr(5);
+            if (bier2 == null)
+                Console.WriteLine("Bier met BierNr 5 niet gevonden");
+            else
+                Console.WriteLine(bier2);
+
+            //Biersoorten:
+
+            List<BierSoort> soorten = await bierenService.GeefBierSoortenAsync();
+            Console.WriteLine("Aantal soorten: " + soorten.Count);
+            //via linq een selectie vragen
+            BierSoort soort = soorten.FirstOrDefault();
+            if (soort != null)
+            {
+                Console.WriteLine($"SoortNr: + {soort.SoortNr} - Naam: {soort.Soort}");
+            }
+            Console.WriteLine();
+
+
+            List<Brouwer> brouwers = await bierenService.GeefBrouwersAsync();
+            Console.WriteLine("Aantal Brouwers: " + brouwers.Count);
+            //Brouwers met postcode=9000
+            List<Brouwer> brouwersUitGent = brouwers.Where(b => b.PostCode == 9000).ToList();
+            Console.WriteLine("Brouwers uit gent: " + brouwersUitGent.Count);
+            brouwersUitGent.ForEach(b => Console.WriteLine("\t" + b.BrNaam));
             Console.WriteLine("Tot ziens!");
         }
     }

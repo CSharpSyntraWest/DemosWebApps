@@ -31,6 +31,49 @@ namespace ConsoleClientApp.Services
                 return null;
             }
         }
+        public async Task<List<BierSoort>> GeefBierSoortenAsync()
+        {
+            HttpResponseMessage response = _client.GetAsync("api/Bieren/GeefAlleBierSoorten").Result;
+            if (response.IsSuccessStatusCode) //StatusCode is 200 = OK
+            {
+                List<BierSoort> soorten = JsonConvert.DeserializeObject<List<BierSoort>>(await response.Content.ReadAsStringAsync());
+                return soorten;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public async Task<List<Brouwer>> GeefBrouwersAsync()
+        {
+            HttpResponseMessage response = _client.GetAsync("api/Bieren/GeefAlleBrouwers").Result;
+            if (response.IsSuccessStatusCode) //StatusCode is 200 = OK
+            {
+                List<Brouwer> brouwers = JsonConvert.DeserializeObject<List<Brouwer>>(await response.Content.ReadAsStringAsync());
+                return brouwers;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        public async Task<Bier> GeefBierVoorBierNr(int bierNr)
+        {
+
+            HttpResponseMessage response = _client.GetAsync("api/Bieren/GeefBierVoorID/" + bierNr).Result;
+
+            if (response.IsSuccessStatusCode)
+            {
+                var bier = JsonConvert.DeserializeObject<Bier>(await response.Content.ReadAsStringAsync());
+
+                return bier;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         //Oefening 1:  
         //1. Voeg een Model class BierSoort toe onder Models folder met 2 properties SoortNr (int) en Soort (string)
         //2. Maak een nieuw Methode in BierenService met naam GeefBierSoortenAsync() die een List<BierSoort> teruggeeft

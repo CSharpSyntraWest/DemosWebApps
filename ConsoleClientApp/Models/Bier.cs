@@ -10,6 +10,10 @@ namespace ConsoleClientApp.Models
         public string Naam { get; set; }
         public double? Alcohol { get; set; }
         public int? SoortNr { get; set; }
+        public override string ToString()
+        {
+            return $"BierNr: {BierNr} - Naam: {Naam} - Alcohol: {Alcohol} - SoortNr: {SoortNr}";
+        }
 
     }
 }
