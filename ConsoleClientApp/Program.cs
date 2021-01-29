@@ -28,8 +28,14 @@ namespace ConsoleClientApp
             //via linq een selectie vragen bv Eerste bier:
             Bier bier = bieren.FirstOrDefault();
             if (bier != null)
+            {
                 Console.WriteLine($"BierNr: {bier.BierNr} - Naam: {bier.Naam} - Alcohol: {bier.Alcohol} - SoortNr: {bier.SoortNr}");
-            Console.ReadKey();
+                Random rand = new Random();
+                Console.WriteLine("Bier van de maand:");
+                Bier randomBier = bieren.ElementAt(rand.Next(0, bieren.Count));
+                Console.WriteLine($"BierNr: {randomBier.BierNr} - Naam: {randomBier.Naam} - Alcohol: {randomBier.Alcohol} - SoortNr: {randomBier.SoortNr}");
+            }
+            Console.WriteLine("Tot ziens!");
         }
     }
 }

@@ -32,8 +32,8 @@ namespace ConsoleClientApp.Services
             }
         }
         //Oefening 1:  
-        //1. Voeg een Model class Soort toe onder Models folder met 2 properties SoortNr (int) en Soort (string)
-        //2. Maak een nieuw Methode in BierenService met naam GeefBierSoortenAsync() die een List<Soort> teruggeeft
+        //1. Voeg een Model class BierSoort toe onder Models folder met 2 properties SoortNr (int) en Soort (string)
+        //2. Maak een nieuw Methode in BierenService met naam GeefBierSoortenAsync() die een List<BierSoort> teruggeeft
         //3. Gebruik de url (http://www.syntrawest.somee.com/) api/Bieren/GeefAlleBierSoorten
         //4. Roep de methode van de BierenService aan vanuit Main van Progam.cs en toon enkele resultaten in de console
 
