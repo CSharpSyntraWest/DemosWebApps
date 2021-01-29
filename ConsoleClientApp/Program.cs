@@ -75,7 +75,6 @@ namespace ConsoleClientApp
             //    ...
             //Oefening Linq6: geef gesorteerde lijst terug (via Linq query) op naam van biersoort, daarna op bier (binnen één biersoort)                     
 
-
             //Oefening StockExchangeService maken:
             //Maak onder de folder Services een nieuwe klasse StockExchangeService aan die de aandeelgegevens
             //opvraagt voor een bepaald aandeel (bv InBev) ("https://financialmodelingprep.com/api/v3/quote/ABI.BR?apikey=8e5b68b6bac6e3fe5c98c5781306f694")
@@ -83,7 +82,8 @@ namespace ConsoleClientApp
             //De unieke code van het aandeel Inbev is ABI.BR 
             //Maak een Methode GeefAandeelInfoAsync(string code) in de StockEchangeService die voor een aandeel code de volgende info teruggeeft:
             //Symbol (string), Name (string), Price(double), ChangesPercentage(double) en Change(double). Maak een Model class Aandeel die deze properties heeft
-            //Opgelet: wanneer je Deserialiseert met JsonConvert gebruik een List<Aandeel>. In deze List zit één enkel object
+            //Opgelet: wanneer je Deserialiseert met JsonConvert gebruik een List<Aandeel>. In deze List zit één enkel Aandeel-object
+            //Roep de Methode GeefAandeelInfoAsync("ABI.BR") aan vanuit program.cs (ConsoleApp) en schrijf deze 5 properties van het aandeel naar de console
             //De url geeft de volgende gegevens terug:
             //[ {
             //            "symbol" : "ABI.BR",
@@ -91,23 +91,7 @@ namespace ConsoleClientApp
             //  "price" : 52.53000000,
             //  "changesPercentage" : -2.11000000,
             //  "change" : -1.13000000,
-            //  "dayLow" : 52.18000000,
-            //  "dayHigh" : 53.05000000,
-            //  "yearHigh" : 70.48000000,
-            //  "yearLow" : 29.02500000,
-            //  "marketCap" : 103559741440.00000000,
-            //  "priceAvg50" : 56.97000000,
-            //  "priceAvg200" : 51.29733700,
-            //  "volume" : 349293,
-            //  "avgVolume" : 1718893,
-            //  "exchange" : "EURONEXT",
-            //  "open" : 52.44000000,
-            //  "previousClose" : 53.66000000,
-            //  "eps" : -0.37400000,
-            //  "pe" : null,
-            //  "earningsAnnouncement" : "2021-02-25T01:00:00.000+0000",
-            //  "sharesOutstanding" : 1971439966,
-            //  "timestamp" : 1611916790
+            //....
             //} ]
             Console.WriteLine("Tot ziens!");
         }
