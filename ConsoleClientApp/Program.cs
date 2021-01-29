@@ -62,7 +62,33 @@ namespace ConsoleClientApp
             Console.WriteLine("Brouwers uit gent: " + brouwersUitGent.Count);
             brouwersUitGent.ForEach(b => Console.WriteLine("\t" + b.BrNaam));
             //Oefening Linq 1 : Geef alle Biernamen met hun soortnamen, gesorteerd op biernaam, daarna op soortnaam
+            var bierenEnSoortnaam = from s in soorten
+                                    join b in bieren on s.SoortNr equals b.SoortNr
+                                    orderby b.Naam, s.Soort
+                                    select new
+                                    {
+                                        Biernaam = b.Naam,
+                                        Soortnaam = s.Soort
+                                    };
+            foreach (var item in bierenEnSoortnaam)
+            {
+                Console.WriteLine(item);
+            }
             //Oefening Linq 2 : Geef per biersoort het aantal bieren (geef soortnaam en aantal bieren)
+            //Method notatie
+            var bierSoortAantalBieren = soorten.GroupJoin(bieren, soort => soort.SoortNr, bier => bier.SoortNr,
+                    (soort, bier) => new
+                    {
+                        SoortNaam = soort.Soort,
+                        AantalBier = bier.Count()
+                    }).ToList();
+            //Query notatie
+            var aantalBierenInSoort = from b in bieren
+                                      join s in soorten on b.SoortNr equals s.SoortNr
+                                      group s by s.Soort
+                                        into soortGroep
+                                      select new { s = soortGroep.Key, aantalBieren = soortGroep.Count() };
+
             //Oefening Linq 3 : Geef voor de brouwers de gemiddelde omzet per postcode (geef postcode en gemiddelde omzet)
             //Pils
             var gemOmzetPerPostcode = from br in brouwers
@@ -90,17 +116,9 @@ namespace ConsoleClientApp
             //    Liefmans Kriek
             //    ...
 
-            var bierenPerSoort = from s in soorten
-                                 join b in bieren on s.SoortNr equals b.SoortNr
-                                 group s by s.Soort
-                                 into soortGroep
-                                 select new
-                                 {
-                                     SoortNaam = soortGroep.Key,
-                                     Bieren = from bier in bieren join soort in soorten on bier.SoortNr equals soort.SoortNr where soort.Soort == soortGroep.Key select bier 
-                                 };
+ 
 
-            //Of korter, zonder group by
+         //Query Notatie
             var bierPersoortGroep = from s in soorten
                                     join b in bieren on s.SoortNr equals b.SoortNr
                                    into bierenGroep
@@ -108,7 +126,7 @@ namespace ConsoleClientApp
                                    select new
                                    {
                                        SoortNaam = s.Soort,
-                                       Bieren = from b in bierenGroep orderby b.Naam select b
+                                       Bieren = from b in bierenGroep select b
                                    };
             foreach (var groep in bierPersoortGroep)
             {
@@ -142,21 +160,22 @@ namespace ConsoleClientApp
             //        Console.WriteLine("\t" + b.Naam);
             //    }
             //}
-            //Oefening Linq6: geef gesorteerde lijst terug (via Linq query) op naam van biersoort, daarna op bier (binnen één biersoort)                     
+            //Oefening Linq6: geef gesorteerde lijst terug (via Linq query) op naam van biersoort, daarna op bier (binnen één biersoort)    
+            //Method Notatie
             var lijstMetNamenPerBiersoort = lijstMetNamenPerBiersoort2.OrderBy(b => b.SoortNaam).ThenBy(b => b.Bieren.Select(b => b.Naam)).ToList();
-
+            //Query Notatie
             var bierenPerSoortOrdered = from s in soorten
-                                 join b in bieren on s.SoortNr equals b.SoortNr
-                                 group s by s.Soort
-                                into soortGroep
-                                 select new
-                                 {
-                                     SoortNaam = soortGroep.Key,
-                                     Bieren = from bier in bieren join soort in soorten on bier.SoortNr equals soort.SoortNr orderby bier.Naam  where soort.Soort == soortGroep.Key select bier
-                                 };
+                                    join b in bieren on s.SoortNr equals b.SoortNr
+                                   into bierenGroep
+                                    orderby s.Soort
+                                    select new
+                                    {
+                                        SoortNaam = s.Soort,
+                                        Bieren = from b in bierenGroep orderby b.Naam select b
+                                    };
 
 
-            foreach (var item in bierenPerSoort)
+            foreach (var item in bierenPerSoortOrdered)
             {
                 Console.WriteLine(item.SoortNaam);
                 foreach (var b in item.Bieren)
