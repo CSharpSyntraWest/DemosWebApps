@@ -118,6 +118,7 @@ namespace ConsoleClientApp
                     Console.WriteLine("\t" + b.Naam);
                 }
             }
+            //Met Method Notatie (Evert)
             var lijstMetNamenPerBiersoort2 = soorten.GroupJoin(bieren, soort => soort.SoortNr, bier => bier.SoortNr,
                         (soort, bier) => new
                         {
