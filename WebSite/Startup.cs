@@ -32,7 +32,7 @@ namespace WebSite
             {
                 endpoints.MapGet("/", async context =>
                 {
-                    var headers = context.Request.Headers;
+                   // var headers = context.Request.Headers;
                     context.Response.Redirect("/default.html");
                    //await context.Response.WriteAsync("Hello World! ");
                 });
