@@ -8,7 +8,7 @@ namespace ConsoleClientApp.Models
     {
         public string BierNr { get; set; }
         public string Naam { get; set; }
-        public double Alcohol { get; set; }
+        public double? Alcohol { get; set; }
         public int? SoortNr { get; set; }
 
     }
