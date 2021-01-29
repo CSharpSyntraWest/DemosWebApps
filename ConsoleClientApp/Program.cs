@@ -64,7 +64,23 @@ namespace ConsoleClientApp
             //Oefening Linq 1 : Geef alle Biernamen met hun soortnamen, gesorteerd op biernaam, daarna op soortnaam
             //Oefening Linq 2 : Geef per biersoort het aantal bieren (geef soortnaam en aantal bieren)
             //Oefening Linq 3 : Geef voor de brouwers de gemiddelde omzet per postcode (geef postcode en gemiddelde omzet)
+            //Pils
+            var gemOmzetPerPostcode = from br in brouwers
+                                      group br by br.PostCode
+                                      into postGroep 
+                                      select new { br = postGroep.Key, 
+                                                    gemOmzet = (from gem in postGroep select gem.Omzet).Average()
+                                                };
+            var gemOmzetPerPostcode2 = from br in brouwers 
+                                      group br by br.PostCode into postGroep 
+                                      select new { br = postGroep.Key, 
+                                          gemOmzet = postGroep.Average(b => b.Omzet) };
             //Oefening Linq 4:  Geef alle brouwers, gesorteerd per gemeente, daarna op brouwernaam
+
+            var alleBrouwers = from b in brouwers
+                               orderby b.Gemeente, b.BrNaam
+                               select b;
+            alleBrouwers.ToList().ForEach(b => Console.WriteLine($"Gemeente {b.Gemeente} - Brouwer {b.BrouwerNr} - {b.BrNaam} - Omzet: {b.Omzet}"));
             //Oefening Linq 5:  Geef een Lijst van namen van biersoorten en per biersoort de lijst van bieren in de soort
             //Pils
             //    Jupiler
@@ -73,8 +89,80 @@ namespace ConsoleClientApp
             //Geuze
             //    Liefmans Kriek
             //    ...
-            //Oefening Linq6: geef gesorteerde lijst terug (via Linq query) op naam van biersoort, daarna op bier (binnen één biersoort)                     
 
+            var bierenPerSoort = from s in soorten
+                                 join b in bieren on s.SoortNr equals b.SoortNr
+                                 group s by s.Soort
+                                 into soortGroep
+                                 select new
+                                 {
+                                     SoortNaam = soortGroep.Key,
+                                     Bieren = from bier in bieren join soort in soorten on bier.SoortNr equals soort.SoortNr where soort.Soort == soortGroep.Key select bier 
+                                 };
+
+            //Of korter, zonder group by
+            var bierPersoortGroep = from s in soorten
+                                    join b in bieren on s.SoortNr equals b.SoortNr
+                                   into bierenGroep
+                                   orderby s.Soort
+                                   select new
+                                   {
+                                       SoortNaam = s.Soort,
+                                       Bieren = from b in bierenGroep orderby b.Naam select b
+                                   };
+            foreach (var groep in bierPersoortGroep)
+            {
+                Console.WriteLine(groep.SoortNaam + ":");
+                foreach (Bier b in  groep.Bieren)
+                {
+                    Console.WriteLine("\t" + b.Naam);
+                }
+            }
+            var lijstMetNamenPerBiersoort2 = soorten.GroupJoin(bieren, soort => soort.SoortNr, bier => bier.SoortNr,
+                        (soort, bier) => new
+                        {
+                            SoortNaam = soort.Soort,
+                            Bieren = bieren.Where(b => b.SoortNr == soort.SoortNr)
+                        }).ToList();
+
+            foreach (var item in lijstMetNamenPerBiersoort2)
+            {
+                Console.WriteLine(item.SoortNaam);
+                foreach (var b in item.Bieren)
+                {
+                    Console.WriteLine("\t" + b.Naam);
+                }
+            }
+            //foreach (var item in bierenPerSoort)
+            //{
+            //    Console.WriteLine(item.SoortNaam);
+            //    foreach (var b in item.Bieren)
+            //    {
+            //        Console.WriteLine("\t" + b.Naam);
+            //    }
+            //}
+            //Oefening Linq6: geef gesorteerde lijst terug (via Linq query) op naam van biersoort, daarna op bier (binnen één biersoort)                     
+            var lijstMetNamenPerBiersoort = lijstMetNamenPerBiersoort2.OrderBy(b => b.SoortNaam).ThenBy(b => b.Bieren.Select(b => b.Naam)).ToList();
+
+            var bierenPerSoortOrdered = from s in soorten
+                                 join b in bieren on s.SoortNr equals b.SoortNr
+                                 group s by s.Soort
+                                into soortGroep
+                                 select new
+                                 {
+                                     SoortNaam = soortGroep.Key,
+                                     Bieren = from bier in bieren join soort in soorten on bier.SoortNr equals soort.SoortNr orderby bier.Naam  where soort.Soort == soortGroep.Key select bier
+                                 };
+
+
+            foreach (var item in bierenPerSoort)
+            {
+                Console.WriteLine(item.SoortNaam);
+                foreach (var b in item.Bieren)
+                {
+                    Console.WriteLine("\t" + b.Naam);
+                }
+            }
             //Oefening StockExchangeService maken:
             //Maak onder de folder Services een nieuwe klasse StockExchangeService aan die de aandeelgegevens
             //opvraagt voor een bepaald aandeel (bv InBev) ("https://financialmodelingprep.com/api/v3/quote/ABI.BR?apikey=8e5b68b6bac6e3fe5c98c5781306f694")
